@@ -100,7 +100,12 @@
     </style>
 </head>
 <body>
-    @include('layouts.header')
+    <!-- Header Section -->
+    <header>
+        <nav>
+            <!-- Navigation bar content here -->
+        </nav>
+    </header>
 
     <main>
         <!-- Hero Section -->
@@ -130,14 +135,13 @@
         </section>
     </main>
 
+    <!-- Footer Section -->
     <footer class="footer-section">
-        <!-- About Us Section -->
         <section>
             <h3>About Us</h3>
             <p>We are Jamal Interior Oasis, committed to providing high-quality furniture and interior design services. Our mission is to transform your living spaces into beautiful and functional environments.</p>
         </section>
 
-        <!-- Testimonials Section -->
         <section>
             <h3>Testimonials</h3>
             @foreach($testimonials as $testimonial)
@@ -145,7 +149,6 @@
             @endforeach
         </section>
 
-        <!-- Locations Section -->
         <section>
             <h3>Our Locations</h3>
             @foreach($locations as $location)
@@ -155,7 +158,5 @@
 
         <p>&copy; {{ date('Y') }} Jamal Interior Oasis. All rights reserved.</p>
     </footer>
-
-    @include('layouts.footer')
 </body>
 </html>

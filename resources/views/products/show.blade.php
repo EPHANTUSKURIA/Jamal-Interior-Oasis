@@ -50,7 +50,7 @@
     </style>
 </head>
 <body>
-    @include('layouts.header')
+    @include('header')
 
     <main class="container">
         <div class="product-detail">
@@ -64,6 +64,6 @@
         </div>
     </main>
 
-    @include('layouts.footer')
+    @include('footer')
 </body>
 </html>
