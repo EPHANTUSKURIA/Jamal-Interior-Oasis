@@ -37,6 +37,29 @@ class ProductController extends Controller
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\RedirectResponse
      */
+
+    public function showCategory($category)
+    {
+        // Fetch products by category from the database
+        $products = Product::where('category', $category)->get();
+
+        // Return a view with the products
+        return view('products.category', compact('products', 'category'));
+    }
+    public function category($category)
+    {
+    $products = Product::where('category', $category)->get();
+    $categoryName = ucwords(str_replace('-', ' ', $category));
+    
+    return view('products.category', [
+        'products' => $products,
+        'categoryName' => $categoryName,]);
+    }
+
+
+
+
+
     public function addToCart(Request $request, $id)
     {
         $product = Product::findOrFail($id); // Fetch product by ID

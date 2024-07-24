@@ -78,7 +78,7 @@
     </style>
 </head>
 <body>
-    @include('layouts.header')
+    @include('header')
 
     <main class="account-container">
         <div class="account-header">
@@ -87,7 +87,7 @@
         </div>
 
         <div class="account-form">
-            <form action="{{ route('account.update') }}" method="POST">
+            <form action="{{ route('account.updateProfile') }}" method="POST">
                 @csrf
                 @method('PUT')
                 <div class="form-group">
@@ -97,6 +97,14 @@
                 <div class="form-group">
                     <label for="email">Email</label>
                     <input type="email" id="email" name="email" value="{{ old('email', $user->email) }}" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password">
+                </div>
+                <div class="form-group">
+                    <label for="password_confirmation">Confirm Password</label>
+                    <input type="password" id="password_confirmation" name="password_confirmation">
                 </div>
                 <div class="form-group">
                     <button type="submit">Update Profile</button>
@@ -129,6 +137,7 @@
         </div>
     </main>
 
-    @include('layouts.footer')
+    @include('footer')
 </body>
 </html>
+

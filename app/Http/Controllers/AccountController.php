@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Models\Order;
 
-class UserController extends Controller
+class AccountController extends Controller
 {
     /**
      * Show the user's profile page.
@@ -16,23 +16,10 @@ class UserController extends Controller
      */
     public function profile()
     {
-    $user = Auth::user(); // Get the logged-in user
-    $orders = $user->orders; // Assuming you have a relationship defined in your User model
+        $user = Auth::user(); // Get the logged-in user
+        $orders = $user->orders; // Fetch orders associated with the user
 
-    return view('account', compact('user', 'orders')); // Pass the variables to the view
-    }
-
-
-    /**
-     * Show the user's order history.
-     *
-     * @return \Illuminate\View\View
-     */
-    public function orderHistory()
-    {
-        $user = Auth::user(); // Get the currently authenticated user
-        $orders = Order::where('user_id', $user->id)->get(); // Fetch orders associated with the user
-        return view('order_history', ['orders' => $orders]);
+        return view('profile', compact('user', 'orders')); // Pass the variables to the view
     }
 
     /**
@@ -50,7 +37,6 @@ class UserController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
             'password' => 'nullable|string|min:6|confirmed', // If password change is included
-            // Add other validation rules as needed
         ]);
 
         // Update user information

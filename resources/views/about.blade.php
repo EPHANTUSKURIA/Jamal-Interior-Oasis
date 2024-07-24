@@ -65,7 +65,7 @@
     </style>
 </head>
 <body>
-    @include('layouts.header')
+    @include('header')
 
     <main class="about-container">
         <div class="about-header">
@@ -98,6 +98,6 @@
         </div>
     </main>
 
-    @include('layouts.footer')
+    @include('footer')
 </body>
 </html>

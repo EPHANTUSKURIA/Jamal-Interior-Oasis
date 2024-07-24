@@ -60,7 +60,7 @@
     </style>
 </head>
 <body>
-    @include('layouts.header')
+    @include('header')
 
     <main class="confirmation-container">
         <div class="confirmation-header">
@@ -118,6 +118,6 @@
         </div>
     </main>
 
-    @include('layouts.footer')
+    @include('footer')
 </body>
 </html>

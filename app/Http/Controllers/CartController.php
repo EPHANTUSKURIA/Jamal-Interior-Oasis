@@ -8,14 +8,25 @@ use App\Models\Product;
 
 class CartController extends Controller
 {
-    // Show cart items
+    /**
+     * Show cart items.
+     *
+     * @return \Illuminate\View\View
+     */
     public function index()
     {
         $cart = Session::get('cart', []);
-        return view('cart', ['cart' => $cart]);
+        $total = $this->calculateTotal($cart);
+        return view('cart.cart', ['cart' => $cart, 'total' => $total]); // Adjust view path as needed
     }
 
-    // Add item to cart
+    /**
+     * Add an item to the cart.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param int $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function add(Request $request, $id)
     {
         $product = Product::findOrFail($id);
@@ -38,11 +49,17 @@ class CartController extends Controller
         return redirect()->route('cart.index')->with('success', 'Item added to cart');
     }
 
-    // Remove item from cart
-    public function remove($id)
+    /**
+     * Remove an item from the cart.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param int $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function remove(Request $request, $id)
     {
         $cart = Session::get('cart', []);
-        
+
         if (isset($cart[$id])) {
             unset($cart[$id]);
             Session::put('cart', $cart);
@@ -51,7 +68,33 @@ class CartController extends Controller
         return redirect()->route('cart.index')->with('success', 'Item removed from cart');
     }
 
-    // Checkout cart items
+    /**
+     * Update item quantities in the cart.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function update(Request $request)
+    {
+        $cart = Session::get('cart', []);
+        $quantities = $request->input('quantity', []);
+
+        foreach ($quantities as $id => $quantity) {
+            if (isset($cart[$id])) {
+                $cart[$id]['quantity'] = max(1, (int)$quantity); // Ensure quantity is at least 1
+            }
+        }
+
+        Session::put('cart', $cart);
+
+        return redirect()->route('cart.index')->with('success', 'Cart updated');
+    }
+
+    /**
+     * Checkout cart items.
+     *
+     * @return \Illuminate\View\View|\Illuminate\Http\RedirectResponse
+     */
     public function checkout()
     {
         $cart = Session::get('cart', []);
@@ -60,12 +103,17 @@ class CartController extends Controller
             return redirect()->route('cart.index')->with('error', 'Your cart is empty');
         }
 
-        // Logic for checkout process, e.g., calculate total price, etc.
-        // You might want to pass data to the checkout view here
-        return view('checkout', ['cart' => $cart]);
+        // Logic for checkout process (e.g., calculate total price, etc.)
+        $total = $this->calculateTotal($cart);
+        return view('checkout', ['cart' => $cart, 'total' => $total]); // Adjust view path as needed
     }
 
-    // Confirm order
+    /**
+     * Confirm order.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function confirm(Request $request)
     {
         $cart = Session::get('cart', []);
@@ -80,5 +128,20 @@ class CartController extends Controller
         Session::forget('cart');
 
         return redirect()->route('order-confirmation')->with('success', 'Order confirmed');
+    }
+
+    /**
+     * Calculate total price of items in the cart.
+     *
+     * @param array $cart
+     * @return float
+     */
+    private function calculateTotal($cart)
+    {
+        $total = 0;
+        foreach ($cart as $item) {
+            $total += $item['price'] * $item['quantity'];
+        }
+        return $total;
     }
 }

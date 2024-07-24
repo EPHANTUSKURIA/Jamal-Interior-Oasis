@@ -57,7 +57,7 @@
     </style>
 </head>
 <body>
-    @include('layouts.header')
+    @include('header')
 
     <main class="container my-4">
         <h1>Our Products</h1>
@@ -76,6 +76,6 @@
         </div>
     </main>
 
-    @include('layouts.footer')
+    @include('footer')
 </body>
 </html>

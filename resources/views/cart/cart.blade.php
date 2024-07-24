@@ -60,7 +60,7 @@
     </style>
 </head>
 <body>
-    @include('layouts.header')
+    @include('header')
 
     <main class="cart-container">
         <div class="cart-header">
@@ -122,6 +122,6 @@
         @endif
     </main>
 
-    @include('layouts.footer')
+    @include('footer')
 </body>
 </html>

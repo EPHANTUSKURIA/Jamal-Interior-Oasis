@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ $product->name }}</title>
-    <!-- Include Bootstrap CSS and custom styles -->
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
     <style>
         .product-detail {
@@ -54,7 +53,11 @@
 
     <main class="container">
         <div class="product-detail">
-            <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}">
+            @if($product->image)
+                <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}">
+            @else
+                <p>No image available</p>
+            @endif
             <div class="product-info">
                 <h1>{{ $product->name }}</h1>
                 <p>{{ $product->description }}</p>
