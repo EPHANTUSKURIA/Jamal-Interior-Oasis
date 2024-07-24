@@ -17,7 +17,14 @@ class AccountController extends Controller
     public function profile()
     {
         $user = Auth::user(); // Get the logged-in user
-        $orders = $user->orders; // Fetch orders associated with the user
+
+        if (!$user) {
+            // If user is not authenticated, redirect to login
+            return redirect()->route('login');
+        }
+
+        // Fetch orders associated with the user
+        $orders = $user->orders;
 
         return view('profile', compact('user', 'orders')); // Pass the variables to the view
     }
@@ -31,6 +38,11 @@ class AccountController extends Controller
     public function updateProfile(Request $request)
     {
         $user = Auth::user(); // Get the currently authenticated user
+
+        if (!$user) {
+            // If user is not authenticated, redirect to login
+            return redirect()->route('login');
+        }
 
         // Validate the request
         $request->validate([
