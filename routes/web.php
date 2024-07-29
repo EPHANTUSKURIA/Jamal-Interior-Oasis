@@ -113,3 +113,4 @@ Route::get('/wishlist', [WishlistController::class, 'index'])->name('wishlist');
 // Order Confirmation Page
 Route::get('/order-confirmation', [OrderController::class, 'index'])->name('order.confirmation');
 
+Route::get('/admin/logout', [AdminController::class, 'logout'])->name('admin.logout');

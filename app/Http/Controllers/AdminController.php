@@ -7,6 +7,7 @@ use App\Models\Order;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
 
 class AdminController extends Controller
 {
@@ -214,5 +215,10 @@ class AdminController extends Controller
         ]);
 
         return redirect()->route('admin.users.index')->with('success', 'User added successfully');
+    }
+    public function logout()
+    {
+        Auth::logout();
+        return redirect('/admin/login'); // Redirect to admin login page after logout
     }
 }
