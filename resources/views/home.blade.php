@@ -116,6 +116,22 @@
             padding: 40px 20px;
             text-align: center;
         }
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: stretch;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .footer-section > div {
+            flex: 1;
+            padding: 0 20px;
+        }
+        .footer-separator {
+            width: 1px;
+            background-color: #ddd;
+            height: 100%;
+        }
         .footer-section h3 {
             font-size: 24px;
             margin-bottom: 20px;
@@ -124,12 +140,8 @@
             margin: 10px 0;
             color: #333;
         }
-        .footer-section .testimonial-item {
-            margin: 10px 0;
+        .testimonial-item {
             font-style: italic;
-        }
-        .footer-section .location-item {
-            margin: 10px 0;
         }
         .product-grid {
             display: flex;
@@ -202,14 +214,18 @@
             <div class="search-cart-categories">
                 <aside class="sidebar">
                     <ul>
-                        <li><a href="{{ route('products.category', 'beds-mattresses') }}">Beds and Mattresses</a></li>
-                        <li><a href="{{ route('products.category', 'dining-tables-chairs') }}">Dining Tables and Chairs</a></li>
-                        <li><a href="{{ route('products.category', 'coffee-tables-side-tables') }}">Coffee Tables and Side Tables</a></li>
-                        <li><a href="{{ route('products.category', 'office-furniture') }}">Office Furniture</a></li>
+                        <li><a href="{{ route('products.category', 'Living Room Furniture') }}">Living Room Furniture</a></li>
+                        <li><a href="{{ route('products.category', 'Dining Room Furniture') }}">Dining Room Furniture</a></li>
+                        <li><a href="{{ route('products.category', 'Bedroom Furniture') }}">Bedroom Furniture</a></li>
+                        <li><a href="{{ route('products.category', 'Outdoor Furniture') }}">Outdoor Furniture</a></li>
+                        <li><a href="{{ route('products.category', 'Office Furniture') }}">Office Furniture</a></li>
                     </ul>
                 </aside>
                 <div class="search-bar">
-                    <input type="text" placeholder="Search for products...">
+                    <form action="{{ route('search.form') }}" method="GET">
+                        <input type="text" name="query" placeholder="Search for products..." required>
+                        <button type="submit">Search</button>
+                    </form>
                 </div>
                 <div class="cart-tool">
                     <a href="{{ route('cart.index') }}">View Cart ({{ Cart::getContent()->count() }} items)</a>
@@ -246,19 +262,27 @@
 
     <!-- Footer Section -->
     <footer class="footer-section">
-        <section>
-            <h3>About Us</h3>
-            <p>Jamal Interior Oasis was founded in January 2017, initially located at Kahawest, Nairobi. Over the years, we have grown from one employee to now 15 employees, surviving various challenges and continuously innovating to meet our customers' needs. Our mission is to provide high-quality furniture and exceptional customer service, ensuring satisfaction in every interaction.</p>
-            <p>Our dedication to quality and service has seen us evolve and expand, providing a wide range of furniture solutions for different needs. We pride ourselves on our craftsmanship, attention to detail, and commitment to creating beautiful and functional interior spaces for our clients.</p>
-        </section>
-
-        <section>
-            <h3>Testimonials</h3>
-            <p class="testimonial-item">"Jamal Interior Oasis provided excellent service. My package was delivered on time and in perfect condition. Highly recommended!" - Julius Mwangi</p>
-        </section>
-
-        <p>&copy; {{ date('Y') }} Jamal Interior Oasis. All rights reserved.</p>
+        <div class="footer-content">
+            <div>
+                <h3>About Us</h3>
+                <p>Jamal Interior Oasis was founded in January 2017, initially located at Kahawest, Nairobi. Over the years, we have grown from one employee to now 15 employees, surviving various challenges and continuously innovating to meet our customers' needs. Our mission is to provide high-quality furniture and exceptional customer service, ensuring satisfaction in every interaction.</p>
+                <p>Our dedication to quality and service has seen us evolve and expand, providing a wide range of furniture solutions for different needs. We pride ourselves on our craftsmanship, attention to detail, and commitment to customer satisfaction.</p>
+            </div>
+            <div class="footer-separator"></div>
+            <div>
+                <h3>Testimonials</h3>
+                <div class="testimonial-item">
+                    <p>"Jamal Interior Oasis offers amazing furniture with timely delivery. Highly recommend!" - Julius Mwangi</p>
+                </div>
+            </div>
+            <div class="footer-separator"></div>
+            <div>
+                <h3>Contact Us</h3>
+                <p>Email: info@jamalinterioroasis.com</p>
+                <p>Phone: +254 759 398 117</p>
+                <p>Location: Nairobi County, Roysambu Constituency, Githurai 45 - Round About, At Opposite Wanjagi Car Wash</p>
+            </div>
+        </div>
     </footer>
 </body>
 </html>
-

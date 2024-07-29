@@ -54,6 +54,17 @@
         .form-group button:hover {
             background-color: #0056b3;
         }
+        .logout-button {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .logout-button form button {
+            background-color: #d9534f;
+            color: #fff;
+        }
+        .logout-button form button:hover {
+            background-color: #c9302c;
+        }
     </style>
 </head>
 <body>
@@ -71,11 +82,11 @@
                 @method('PUT')
                 <div class="form-group">
                     <label for="name">Name</label>
-                    <input type="text" id="name" name="name" value="{{ old('name', $user->name) }}" required>
+                    <input type="text" id="name" name="name" value="{{ old('name', auth()->user()->name) }}" required>
                 </div>
                 <div class="form-group">
                     <label for="email">Email</label>
-                    <input type="email" id="email" name="email" value="{{ old('email', $user->email) }}" required>
+                    <input type="email" id="email" name="email" value="{{ old('email', auth()->user()->email) }}" required>
                 </div>
                 <div class="form-group">
                     <label for="password">Password</label>
@@ -88,6 +99,13 @@
                 <div class="form-group">
                     <button type="submit">Update Profile</button>
                 </div>
+            </form>
+        </div>
+
+        <div class="logout-button">
+            <form action="{{ route('logout') }}" method="POST">
+                @csrf
+                <button type="submit">Logout</button>
             </form>
         </div>
     </main>

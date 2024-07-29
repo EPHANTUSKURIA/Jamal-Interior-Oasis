@@ -17,7 +17,7 @@ class CartController extends Controller
     {
         $cart = Session::get('cart', []);
         $total = $this->calculateTotal($cart);
-        return view('cart.cart', ['cart' => $cart, 'total' => $total]); // Adjust view path as needed
+        return view('cart.cart', ['cart' => $cart, 'total' => $total]);
     }
 
     /**
@@ -32,7 +32,6 @@ class CartController extends Controller
         $product = Product::findOrFail($id);
         $cart = Session::get('cart', []);
 
-        // Add or update the item in the cart
         if (isset($cart[$id])) {
             $cart[$id]['quantity'] += $request->input('quantity', 1);
         } else {
@@ -81,7 +80,7 @@ class CartController extends Controller
 
         foreach ($quantities as $id => $quantity) {
             if (isset($cart[$id])) {
-                $cart[$id]['quantity'] = max(1, (int)$quantity); // Ensure quantity is at least 1
+                $cart[$id]['quantity'] = max(1, (int)$quantity);
             }
         }
 
@@ -103,9 +102,8 @@ class CartController extends Controller
             return redirect()->route('cart.index')->with('error', 'Your cart is empty');
         }
 
-        // Logic for checkout process (e.g., calculate total price, etc.)
         $total = $this->calculateTotal($cart);
-        return view('checkout', ['cart' => $cart, 'total' => $total]); // Adjust view path as needed
+        return view('checkout', ['cart' => $cart, 'total' => $total]);
     }
 
     /**
@@ -122,9 +120,6 @@ class CartController extends Controller
             return redirect()->route('cart.index')->with('error', 'Your cart is empty');
         }
 
-        // Process order (e.g., save order to database, handle payment, etc.)
-
-        // Clear cart
         Session::forget('cart');
 
         return redirect()->route('order-confirmation')->with('success', 'Order confirmed');
@@ -145,3 +140,4 @@ class CartController extends Controller
         return $total;
     }
 }
+

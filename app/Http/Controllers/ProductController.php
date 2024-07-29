@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
@@ -32,34 +33,41 @@ class ProductController extends Controller
     }
 
     /**
-     * Add a product to the cart.
+     * Show the products by category.
      *
-     * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\RedirectResponse
+     * @param string $category
+     * @return \Illuminate\View\View
      */
-
-    public function showCategory($category)
-    {
-        // Fetch products by category from the database
-        $products = Product::where('category', $category)->get();
-
-        // Return a view with the products
-        return view('products.category', compact('products', 'category'));
-    }
     public function category($category)
     {
-    $products = Product::where('category', $category)->get();
+    // Fetch products by category
+    $products = Product::where('category_id', $category)->get();
     $categoryName = ucwords(str_replace('-', ' ', $category));
+
+    // Check if category has products
+    if ($products->isEmpty()) {
+            return view('products.no-items', ['categoryName' => $category]);
+    }
     
     return view('products.category', [
         'products' => $products,
-        'categoryName' => $categoryName,]);
+        'categoryName' => $category,
+    ]);
     }
 
+     public function showCategory($category)
+    {
+        $products = Product::where('category_id', $category)->get();
+        return view('products.category', compact('products', 'category'));
+    }
 
-
-
-
+    /**
+     * Add a product to the cart.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param int $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function addToCart(Request $request, $id)
     {
         $product = Product::findOrFail($id); // Fetch product by ID
@@ -82,5 +90,48 @@ class ProductController extends Controller
         Session::put('cart', $cart);
 
         return redirect()->route('cart'); // Redirect to cart page
+    }
+
+    /**
+     * Show the form for creating a new product.
+     *
+     * @return \Illuminate\View\View
+     */
+    public function create()
+    {
+        return view('admin.products.create');
+    }
+
+    /**
+     * Store a newly created product in storage.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    
+     public function store(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'required|string',
+            'price' => 'required|numeric',
+            'category' => 'required|string|max:255',
+            'image' => 'nullable|image|max:2048',
+        ]);
+
+        $product = new Product();
+        $product->name = $request->name;
+        $product->description = $request->description;
+        $product->price = $request->price;
+        $product->category_id = $request->category;
+
+        if ($request->hasFile('image')) {
+            $path = $request->file('image')->store('products', 'public');
+            $product->image_url = $path;
+        }
+
+        $product->save();
+
+        return redirect()->route('admin.products.index')->with('success', 'Product created successfully.');
     }
 }

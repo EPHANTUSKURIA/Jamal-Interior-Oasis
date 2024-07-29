@@ -61,7 +61,7 @@
             <div class="product-info">
                 <h1>{{ $product->name }}</h1>
                 <p>{{ $product->description }}</p>
-                <div class="price">${{ number_format($product->price, 2) }}</div>
+                <div class="price">Ksh{{ number_format($product->price, 2) }}</div>
                 <a href="{{ route('cart.add', $product->id) }}" class="btn">Add to Cart</a>
             </div>
         </div>

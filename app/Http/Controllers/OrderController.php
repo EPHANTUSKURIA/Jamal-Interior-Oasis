@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use App\Models\Product;
 use App\Models\Order;
-use App\Models\Location;
+use Illuminate\Support\Facades\Log;
 
 class OrderController extends Controller
 {
@@ -17,14 +17,18 @@ class OrderController extends Controller
      */
     public function confirm()
     {
-        // Fetch necessary data for the order confirmation
-        $cart = Session::get('cart', []);
-        $total = array_sum(array_column($cart, 'price')); // Assuming 'price' is a key in cart items
+        $order = Order::where('user_id', auth()->id())->latest()->firstOrFail();
+        $order->items = $order->items;
 
-        return view('order_confirmation', [
-            'cart' => $cart,
-            'total' => $total
-        ]);
+        $order->subtotal = $order->items->sum(function ($item) {
+            return $item->quantity * $item->price;
+        });
+        $order->shipping_cost = $order->delivery_option == 'delivery' ? 10 : 0;
+        $order->total = $order->subtotal + $order->shipping_cost;
+
+        Log::info('Order Details:', ['order' => $order]);
+
+        return view('order_confirmation', ['order' => $order]);
     }
 
     /**
@@ -36,26 +40,34 @@ class OrderController extends Controller
     public function checkout(Request $request)
     {
         $cart = Session::get('cart', []);
-        $total = array_sum(array_column($cart, 'price')); // Assuming 'price' is a key in cart items
-        
-        // Validate the request
+        $total = array_sum(array_column($cart, 'price'));
+
         $request->validate([
             'delivery_option' => 'required',
             'delivery_location' => 'required_if:delivery_option,delivery',
         ]);
 
-        // Handle the checkout based on delivery option
         $order = new Order();
-        $order->user_id = auth()->id(); // Assuming user is authenticated
+        $order->user_id = auth()->id();
         $order->total = $total;
         $order->delivery_option = $request->input('delivery_option');
         $order->delivery_location = $request->input('delivery_location');
         $order->save();
 
-        // Clear the cart session
         Session::forget('cart');
 
-        // Redirect to order confirmation page
         return redirect()->route('order.confirm');
+    }
+
+    /**
+     * Display a listing of orders.
+     *
+     * @return \Illuminate\View\View
+     */
+    public function index()
+    {
+        $orders = Order::all();
+
+        return view('orders.index', ['orders' => $orders]);
     }
 }

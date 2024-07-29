@@ -116,6 +116,10 @@
                     <label for="category">Category</label>
                     <input type="text" id="category" name="category" required>
                 </div>
+                <div class="form-group">
+                    <label for="image">Product Image</label>
+                    <input type="file" id="image" name="image" required>
+                </div>
                 <button type="submit" class="btn btn-primary">Create Product</button>
             </form>
         </div>

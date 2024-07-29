@@ -9,59 +9,54 @@ use App\Models\Order;
 
 class AccountController extends Controller
 {
-    /**
-     * Show the user's profile page.
-     *
-     * @return \Illuminate\View\View
-     */
+    // Show the user's profile page.
     public function profile()
     {
-        $user = Auth::user(); // Get the logged-in user
+        $user = Auth::user();
 
         if (!$user) {
-            // If user is not authenticated, redirect to login
             return redirect()->route('login');
         }
 
-        // Fetch orders associated with the user
         $orders = $user->orders;
 
-        return view('profile', compact('user', 'orders')); // Pass the variables to the view
+        return view('profile', compact('user', 'orders'));
     }
 
-    /**
-     * Update the user's profile information.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\RedirectResponse
-     */
+    // Update the user's profile information.
     public function updateProfile(Request $request)
     {
-        $user = Auth::user(); // Get the currently authenticated user
+        $user = Auth::user();
 
         if (!$user) {
-            // If user is not authenticated, redirect to login
             return redirect()->route('login');
         }
 
-        // Validate the request
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
-            'password' => 'nullable|string|min:6|confirmed', // If password change is included
+            'password' => 'nullable|string|min:6|confirmed',
         ]);
 
-        // Update user information
         $user->name = $request->input('name');
         $user->email = $request->input('email');
-        
-        // Update password if it is provided
+
         if ($request->filled('password')) {
             $user->password = bcrypt($request->input('password'));
         }
 
-        $user->save(); // Save the updated user information
+        $user->save();
 
         return redirect()->route('account.profile')->with('success', 'Profile updated successfully!');
+    }
+
+    // Logout the user.
+    public function logout(Request $request)
+    {
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect('/login');
     }
 }

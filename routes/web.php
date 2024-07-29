@@ -1,32 +1,22 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\HomeController;
-use App\Http\Controllers\ProductController;
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\ProductController;
 use App\Http\Controllers\UserController;
-use App\Http\Controllers\AdminController;
-use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ContentController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\WishlistController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\AccountController;
-
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|
-*/
+use App\Http\Controllers\AuthController;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 
 // Home Page
-Route::get('/home', [HomeController::class, 'index'])->name('home');
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
 // Product Listings Page
 Route::get('/products', [ProductController::class, 'index'])->name('products.index');
@@ -51,9 +41,15 @@ Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.in
 // User Account Page
 Route::get('/order-history', [UserController::class, 'orderHistory'])->name('account.orderHistory');
 
-// Add these lines to use AccountController for profile and update actions:
+// Orders
+Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
+
+// Account routes
 Route::get('/account', [AccountController::class, 'profile'])->name('account.profile');
 Route::put('/account/update', [AccountController::class, 'updateProfile'])->name('account.updateProfile');
+Route::post('/account/logout', [AccountController::class, 'logout'])->name('account.logout');
+
+
 
 // Admin Dashboard
 Route::get('/admin/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
@@ -70,7 +66,7 @@ Route::prefix('admin/orders')->group(function () {
 Route::prefix('admin/users')->group(function () {
     Route::get('/', [AdminController::class, 'users'])->name('admin.users.index');
     Route::get('/create', [AdminController::class, 'createUser'])->name('admin.users.create');
-    Route::post('/', [AdminController::class, 'storeUser'])->name('admin.users.store'); // Added this line
+    Route::post('/', [AdminController::class, 'storeUser'])->name('admin.users.store');
     Route::get('/{id}', [AdminController::class, 'showUser'])->name('admin.users.show');
 });
 
@@ -78,10 +74,10 @@ Route::prefix('admin/users')->group(function () {
 Route::prefix('admin/products')->group(function () {
     Route::get('/', [AdminController::class, 'products'])->name('admin.products.index');
     Route::get('/create', [AdminController::class, 'createProduct'])->name('admin.products.create');
-    Route::post('/', [AdminController::class, 'storeProduct'])->name('admin.products.store'); // Moved this line inside the group
+    Route::post('/', [AdminController::class, 'storeProduct'])->name('admin.products.store');
     Route::get('/{id}/edit', [AdminController::class, 'editProduct'])->name('admin.products.edit');
     Route::put('/{id}', [AdminController::class, 'updateProduct'])->name('admin.products.update');
-    Route::delete('/{id}', [AdminController::class, 'deleteProduct'])->name('admin.products.destroy'); // Corrected this line
+    Route::delete('/{id}', [AdminController::class, 'deleteProduct'])->name('admin.products.destroy');
 });
 
 // Admin routes for Reports
@@ -94,6 +90,7 @@ Route::prefix('admin/reports')->group(function () {
 // Authentication routes
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.submit');
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::get('/register', [AuthController::class, 'showRegistrationForm'])->name('register');
 Route::post('/register', [AuthController::class, 'register'])->name('register.submit');
 
@@ -101,8 +98,9 @@ Route::post('/register', [AuthController::class, 'register'])->name('register.su
 Route::get('/about', [ContentController::class, 'about'])->name('about');
 Route::get('/contact', [ContentController::class, 'contact'])->name('contact');
 
-// Search route
-Route::get('/search', [SearchController::class, 'search'])->name('search');
+// Search Routes
+Route::get('/search', [SearchController::class, 'index'])->name('search.form');
+Route::post('/search/results', [SearchController::class, 'search'])->name('search.results');
 
 // Wishlist route
 Route::get('/wishlist', [WishlistController::class, 'index'])->name('wishlist');
@@ -110,7 +108,3 @@ Route::get('/wishlist', [WishlistController::class, 'index'])->name('wishlist');
 // Order Confirmation Page
 Route::get('/order-confirmation', [OrderController::class, 'index'])->name('order.confirmation');
 
-// Custom Error Pages
-Route::fallback(function () {
-    return view('errors.404');
-});

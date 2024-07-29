@@ -67,7 +67,7 @@
     </style>
 </head>
 <body>
-    @include('layouts.header')
+    @include('header')
 
     <main class="wishlist-container">
         <div class="wishlist-header">
@@ -99,6 +99,6 @@
         </div>
     </main>
 
-    @include('layouts.footer')
+    @include('footer')
 </body>
 </html>
