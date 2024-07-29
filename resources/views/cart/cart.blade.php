@@ -94,10 +94,10 @@
                                 </td>
                                 <td>${{ number_format($item['price'] * $item['quantity'], 2) }}</td>
                                 <td>
-                                    <form action="{{ route('cart.remove', $id) }}" method="POST" style="display:inline;">
+                                    <form action="{{ route('cart.destroy', $id) }}" method="POST" style="display:inline;">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" style="background-color: #dc3545;">Remove</button>
+                                        <button type="submit" style="background-color: #3583dc;">Remove</button>
                                     </form>
                                 </td>
                             </tr>

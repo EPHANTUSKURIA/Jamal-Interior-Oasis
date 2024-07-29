@@ -126,14 +126,22 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($order->items as $item)
-                        <tr>
-                            <td>{{ $item->product_name }}</td>
-                            <td>{{ $item->quantity }}</td>
-                            <td>${{ number_format($item->price, 2) }}</td>
-                            <td>${{ number_format($item->quantity * $item->price, 2) }}</td>
-                        </tr>
-                    @endforeach
+                    @if($order->items && $order->items->count())
+    @foreach($order->items as $item)
+        <tr>
+            <td>{{ $item->product->name }}</td> <!-- Ensure product relationship is correctly set -->
+            <td>{{ $item->quantity }}</td>
+            <td>Ksh{{ number_format($item->price, 2) }}</td> <!-- Change $ to Ksh -->
+            <td>Ksh{{ number_format($item->quantity * $item->price, 2) }}</td> <!-- Change $ to Ksh -->
+        </tr>
+    @endforeach
+@else
+    <tr>
+        <td colspan="4">No items found.</td>
+    </tr>
+@endif
+
+                
                 </tbody>
             </table>
 

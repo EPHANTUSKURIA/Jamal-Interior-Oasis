@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Storage;
 class ProductController extends Controller
 {
     /**
-     * Show the list of all products.
+     * Display a listing of all products.
      *
      * @return \Illuminate\View\View
      */
@@ -21,7 +21,7 @@ class ProductController extends Controller
     }
 
     /**
-     * Show the details of a specific product.
+     * Display the details of a specific product.
      *
      * @param int $id
      * @return \Illuminate\View\View
@@ -33,32 +33,26 @@ class ProductController extends Controller
     }
 
     /**
-     * Show the products by category.
+     * Display products by category.
      *
      * @param string $category
      * @return \Illuminate\View\View
      */
     public function category($category)
     {
-    // Fetch products by category
-    $products = Product::where('category_id', $category)->get();
-    $categoryName = ucwords(str_replace('-', ' ', $category));
-
-    // Check if category has products
-    if ($products->isEmpty()) {
-            return view('products.no-items', ['categoryName' => $category]);
-    }
-    
-    return view('products.category', [
-        'products' => $products,
-        'categoryName' => $category,
-    ]);
-    }
-
-     public function showCategory($category)
-    {
+        // Fetch products by category
         $products = Product::where('category_id', $category)->get();
-        return view('products.category', compact('products', 'category'));
+        $categoryName = ucwords(str_replace('-', ' ', $category));
+
+        // Check if category has products
+        if ($products->isEmpty()) {
+            return view('products.no-items', ['categoryName' => $categoryName]);
+        }
+
+        return view('products.category', [
+            'products' => $products,
+            'categoryName' => $categoryName,
+        ]);
     }
 
     /**
@@ -108,26 +102,26 @@ class ProductController extends Controller
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    
-     public function store(Request $request)
+    public function store(Request $request)
     {
         $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'required|string',
-            'price' => 'required|numeric',
-            'category' => 'required|string|max:255',
-            'image' => 'nullable|image|max:2048',
+            'price' => 'required|numeric|min:0',
+            'category' => 'required|integer|exists:categories,id', // Ensure category exists
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Allow specific image types
         ]);
 
         $product = new Product();
-        $product->name = $request->name;
-        $product->description = $request->description;
-        $product->price = $request->price;
-        $product->category_id = $request->category;
+        $product->name = $request->input('name');
+        $product->description = $request->input('description');
+        $product->price = $request->input('price');
+        $product->category_id = $request->input('category');
 
         if ($request->hasFile('image')) {
-            $path = $request->file('image')->store('products', 'public');
-            $product->image_url = $path;
+            // Store image in public/images directory
+            $imagePath = $request->file('image')->store('images', 'public');
+            $product->image_url = $imagePath; // Store image path in database
         }
 
         $product->save();
@@ -135,3 +129,4 @@ class ProductController extends Controller
         return redirect()->route('admin.products.index')->with('success', 'Product created successfully.');
     }
 }
+

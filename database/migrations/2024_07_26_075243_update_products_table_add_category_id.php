@@ -4,28 +4,32 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
+class UpdateProductsTableAddCategoryId extends Migration
 {
     /**
      * Run the migrations.
+     *
+     * @return void
      */
-    // database/migrations/xxxx_xx_xx_xxxxxx_update_products_table_add_category_id.php
+    public function up()
+    {
+        Schema::table('products', function (Blueprint $table) {
+            $table->bigInteger('category_id')->unsigned()->nullable()->after('id');
+            $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
+        });
+    }
 
-public function up()
-{
-    Schema::table('products', function (Blueprint $table) {
-        $table->unsignedBigInteger('category_id')->after('id');
-        $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
-    });
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::table('products', function (Blueprint $table) {
+            $table->dropForeign(['category_id']);
+            $table->dropColumn('category_id');
+        });
+    }
 }
 
-public function down()
-{
-    Schema::table('products', function (Blueprint $table) {
-        $table->dropForeign(['category_id']);
-        $table->dropColumn('category_id');
-    });
-}
-
-    
-};

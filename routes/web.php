@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
 // Home Page
-Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/home', [HomeController::class, 'index'])->name('home');
 
 // Product Listings Page
 Route::get('/products', [ProductController::class, 'index'])->name('products.index');
@@ -34,7 +34,9 @@ Route::post('/cart/remove/{id}', [CartController::class, 'remove'])->name('cart.
 Route::post('/cart/update', [CartController::class, 'update'])->name('cart.update');
 Route::get('/checkout', [CartController::class, 'checkout'])->name('cart.checkout');
 Route::post('/checkout/confirm', [CartController::class, 'confirm'])->name('cart.confirm');
-
+Route::delete('/cart/{id}', [CartController::class, 'destroy'])->name('cart.destroy');
+Route::post('/checkout.process', [CheckoutController::class, 'process'])->name('checkout.process');
+Route::delete('/cart/remove/{productId}', [CartController::class, 'destroy'])->name('cart.destroy');
 // Checkout Page
 Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
 
@@ -43,6 +45,9 @@ Route::get('/order-history', [UserController::class, 'orderHistory'])->name('acc
 
 // Orders
 Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
+Route::post('/orders', [OrderController::class, 'store'])->name('orders.store');
+Route::get('/orders/confirm', [OrderController::class, 'confirm'])->name('orders.confirm');
+
 
 // Account routes
 Route::get('/account', [AccountController::class, 'profile'])->name('account.profile');

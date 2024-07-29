@@ -16,8 +16,10 @@ class CreateOrdersTable extends Migration
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->decimal('total_amount', 8, 2);
+            $table->decimal('total_amount', 10, 2)->default(0)->change();
             $table->string('status')->default('pending');
+            $table->string('delivery_option');
+            $table->string('delivery_location')->nullable();
             $table->timestamp('order_date')->useCurrent();
             $table->timestamps();
         });

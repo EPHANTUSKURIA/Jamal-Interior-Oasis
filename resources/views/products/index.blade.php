@@ -92,7 +92,7 @@
                     <div class="product-info">
                         <h3>{{ $product->name }}</h3>
                         <p>{{ $product->description }}</p>
-                        <div class="price">Ksh{{ number_format($product->price, 2) }}</div>
+                        <div class="price">Ksh {{ number_format($product->price, 2) }}</div>
                         <a href="{{ route('products.show', $product->id) }}" class="btn">View Details</a>
                     </div>
                 </div>

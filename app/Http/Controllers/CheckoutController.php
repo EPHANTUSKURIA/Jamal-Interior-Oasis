@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
-use App\Models\Product;
 use App\Models\Order;
+use App\Models\OrderItem;
 
 class CheckoutController extends Controller
 {
@@ -18,7 +18,13 @@ class CheckoutController extends Controller
             return redirect()->route('cart.index')->with('error', 'Your cart is empty');
         }
 
-        return view('checkout', ['cart' => $cart]);
+        // Calculate total price
+        $totalPrice = $this->calculateTotalPrice($cart);
+
+        return view('cart.checkout', [
+            'cart' => $cart,
+            'total' => $totalPrice,
+        ]);
     }
 
     // Process the checkout
@@ -30,22 +36,30 @@ class CheckoutController extends Controller
             return redirect()->route('cart.index')->with('error', 'Your cart is empty');
         }
 
-        $deliveryOption = $request->input('delivery_option');
-        $deliveryAddress = $request->input('delivery_address');
+        // Validate request
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'address' => 'required|string|max:255',
+            'city' => 'required|string|max:255',
+            'state' => 'required|string|max:255',
+            'zip' => 'required|string|max:20',
+            'country' => 'required|string|max:255',
+            'delivery_option' => 'required|in:pickup,delivery',
+            'delivery_address' => 'nullable|string|max:255',
+        ]);
+
+        $deliveryOption = $validated['delivery_option'];
+        $deliveryAddress = $deliveryOption === 'delivery' ? $validated['delivery_address'] : null;
         $totalPrice = $this->calculateTotalPrice($cart);
 
-        // Validate the delivery option
-        if ($deliveryOption == 'delivery' && empty($deliveryAddress)) {
-            return redirect()->route('checkout.index')->with('error', 'Please provide a delivery address');
-        }
-
         // Create the order
-        $order = new Order();
-        $order->user_id = auth()->id(); // Assuming user is authenticated
-        $order->total_price = $totalPrice;
-        $order->delivery_option = $deliveryOption;
-        $order->delivery_address = $deliveryOption == 'delivery' ? $deliveryAddress : null;
-        $order->save();
+        $order = Order::create([
+            'user_id' => auth()->id(), // Assuming user is authenticated
+            'total_price' => $totalPrice,
+            'delivery_option' => $deliveryOption,
+            'delivery_address' => $deliveryAddress,
+        ]);
 
         // Save order items
         foreach ($cart as $productId => $item) {
@@ -59,18 +73,12 @@ class CheckoutController extends Controller
         // Clear the cart
         Session::forget('cart');
 
-        return redirect()->route('order-confirmation')->with('success', 'Order placed successfully');
+        return redirect()->route('orders.confirm')->with('success', 'Order placed successfully');
     }
 
     // Calculate the total price of the cart
-    private function calculateTotalPrice($cart)
+    private function calculateTotalPrice(array $cart): float
     {
-        $totalPrice = 0;
-
-        foreach ($cart as $item) {
-            $totalPrice += $item['price'] * $item['quantity'];
-        }
-
-        return $totalPrice;
+        return array_sum(array_map(fn($item) => $item['price'] * $item['quantity'], $cart));
     }
 }

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Shopping Cart</title>
+    <title>Your Orders</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -11,7 +11,7 @@
             padding: 0;
         }
         .container {
-            max-width: 800px;
+            max-width: 900px;
             margin: 20px auto;
             padding: 20px;
             background-color: #fff;
@@ -26,104 +26,76 @@
         .header h1 {
             color: #172D13;
         }
-        .cart-items {
+        .order-list {
             margin-top: 20px;
         }
-        .cart-items table {
+        .order-list table {
             width: 100%;
             border-collapse: collapse;
             margin-bottom: 20px;
         }
-        .cart-items th, .cart-items td {
+        .order-list th, .order-list td {
             padding: 10px;
             border-bottom: 1px solid #ddd;
         }
-        .cart-items th {
+        .order-list th {
             background-color: #D76F30;
             color: #fff;
         }
-        .cart-items td {
+        .order-list td {
             text-align: center;
         }
-        .cart-items img {
-            max-width: 50px;
-            max-height: 50px;
+        .order-list .details {
+            cursor: pointer;
+            color: #6BB77B;
         }
-        .total {
-            text-align: right;
-            font-size: 18px;
+        .order-list .details:hover {
+            text-decoration: underline;
+        }
+        .order-list .status {
             font-weight: bold;
         }
-        .buttons {
-            text-align: right;
-        }
-        .buttons a, .buttons button {
-            display: inline-block;
-            padding: 10px 20px;
-            margin: 5px;
-            text-decoration: none;
-            background-color: #6BB77B;
-            color: #fff;
-            border-radius: 5px;
-            font-weight: bold;
-            transition: background-color 0.3s ease;
-        }
-        .buttons a:hover, .buttons button:hover {
-            background-color: #172D13;
+        .order-summary {
+            margin-top: 20px;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>Your Shopping Cart</h1>
+            <h1>Your Orders</h1>
         </div>
-        <div class="cart-items">
+        <div class="order-list">
             <table>
                 <thead>
                     <tr>
-                        <th>Product</th>
+                        <th>Order Date</th>
+                        <th>Customer Name</th>
+                        <th>Product Name</th>
                         <th>Quantity</th>
-                        <th>Price</th>
-                        <th>Total</th>
-                        <th>Remove</th>
+                        <th>Total Price</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @forelse ($cart as $id => $item)
+                    @forelse ($orders as $order)
                         <tr>
+                            <td>{{ $order->id }}</td>
+                            <td>{{ $order->created_at->format('Y-m-d') }}</td>
+                            <td>${{ number_format($order->total, 2) }}</td>
+                            <td class="status">{{ ucfirst($order->status) }}</td>
                             <td>
-                                <img src="{{ $item['image'] }}" alt="{{ $item['name'] }}">
-                                <p>{{ $item['name'] }}</p>
-                            </td>
-                            <td>{{ $item['quantity'] }}</td>
-                            <td>${{ number_format($item['price'], 2) }}</td>
-                            <td>${{ number_format($item['price'] * $item['quantity'], 2) }}</td>
-                            <td>
-                                <form action="{{ route('cart.remove', $id) }}" method="POST">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit">Remove</button>
-                                </form>
+                                <a href="{{ route('orders.index', $order->id) }}" class="details">View Details</a>
                             </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="5">Your cart is empty.</td>
+                            <td colspan="5">You have no orders yet.</td>
                         </tr>
                     @endforelse
                 </tbody>
             </table>
         </div>
-        <div class="total">
-            <p>Total: ${{ number_format($total, 2) }}</p>
-        </div>
-        <div class="buttons">
-            <a href="{{ route('products.index') }}">Continue Shopping</a>
-            @if (!empty($cart))
-                <a href="{{ route('cart.checkout') }}">Checkout</a>
-            @endif
-        </div>
     </div>
 </body>
 </html>
+

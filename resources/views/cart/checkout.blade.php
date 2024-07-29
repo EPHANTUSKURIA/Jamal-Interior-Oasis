@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Checkout</title>
-    <!-- Include Bootstrap CSS and custom styles -->
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
     <style>
         .checkout-container {
@@ -67,15 +66,15 @@
     </style>
 </head>
 <body>
-    @include('layouts.header')
+    @include('header')
 
     <main class="checkout-container">
         <div class="checkout-header">
             <h1>Checkout</h1>
         </div>
 
-        @if(session('cart') && count(session('cart')) > 0)
-            <form action="{{ route('order.store') }}" method="POST">
+        @if($cart && count($cart) > 0)
+            <form action="{{ route('checkout.process') }}" method="POST">
                 @csrf
 
                 <h2>Shipping Information</h2>
@@ -114,6 +113,19 @@
                     <input type="text" id="country" name="country" value="{{ old('country') }}" required>
                 </div>
 
+                <div class="form-group">
+                    <label for="delivery_option">Delivery Option</label>
+                    <select id="delivery_option" name="delivery_option" required>
+                        <option value="pickup">Pick Up</option>
+                        <option value="delivery">Delivery</option>
+                    </select>
+                </div>
+
+                <div class="form-group" id="delivery_address_container" style="display: none;">
+                    <label for="delivery_address">Delivery Address</label>
+                    <input type="text" id="delivery_address" name="delivery_address" value="{{ old('delivery_address') }}">
+                </div>
+
                 <h2>Order Summary</h2>
                 <table class="cart-table">
                     <thead>
@@ -125,7 +137,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach(session('cart') as $id => $item)
+                        @foreach($cart as $id => $item)
                             <tr>
                                 <td>{{ $item['name'] }}</td>
                                 <td>${{ number_format($item['price'], 2) }}</td>
@@ -149,6 +161,17 @@
         @endif
     </main>
 
-    @include('layouts.footer')
+    @include('footer')
+
+    <script>
+        document.getElementById('delivery_option').addEventListener('change', function() {
+            var deliveryAddressContainer = document.getElementById('delivery_address_container');
+            if (this.value === 'delivery') {
+                deliveryAddressContainer.style.display = 'block';
+            } else {
+                deliveryAddressContainer.style.display = 'none';
+            }
+        });
+    </script>
 </body>
 </html>

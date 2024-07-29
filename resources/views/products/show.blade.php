@@ -42,6 +42,7 @@
             border: none;
             border-radius: 4px;
             text-decoration: none;
+            display: inline-block;
         }
         .product-info .btn:hover {
             background: #0056b3;
@@ -61,8 +62,13 @@
             <div class="product-info">
                 <h1>{{ $product->name }}</h1>
                 <p>{{ $product->description }}</p>
-                <div class="price">Ksh{{ number_format($product->price, 2) }}</div>
-                <a href="{{ route('cart.add', $product->id) }}" class="btn">Add to Cart</a>
+                <div class="price">Ksh {{ number_format($product->price, 2) }}</div>
+
+                <!-- Form to add the product to the cart -->
+                <form action="{{ route('cart.add', $product->id) }}" method="POST">
+                    @csrf
+                    <button type="submit" class="btn">Add to Cart</button>
+                </form>
             </div>
         </div>
     </main>
@@ -70,3 +76,4 @@
     @include('footer')
 </body>
 </html>
+

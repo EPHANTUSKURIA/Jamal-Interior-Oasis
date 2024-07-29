@@ -71,6 +71,8 @@
         <div class="header">
             <h1>Thank You for Your Order!</h1>
             <p>Your order has been successfully placed and is being processed.</p>
+            <p>Delivery Option: {{ $order->delivery_option }}</p>
+            <p>Delivery Location: {{ $order->delivery_location }}</p>
         </div>
 
         <div class="order-details">
@@ -79,16 +81,18 @@
                 <thead>
                     <tr>
                         <th>Product</th>
-                        <th>Quantity</th>
                         <th>Price</th>
+                        <th>Quantity</th>
+                        <th>Total</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($order->items as $item)
+                    @foreach ($order->items as $OrderItem)
                         <tr>
-                            <td>{{ $item->name }}</td>
-                            <td>{{ $item->quantity }}</td>
-                            <td>${{ number_format($item->price, 2) }}</td>
+                           <td>{{ $OrderItem->product->name }}</td>
+                           <td>${{ number_format($OrderItem->price, 2) }}</td>
+                           <td>{{ $OrderItem->quantity }}</td>
+                           <td>${{ number_format($OrderItem->price * $OrderItem->quantity, 2) }}</td>
                         </tr>
                     @endforeach
                 </tbody>
