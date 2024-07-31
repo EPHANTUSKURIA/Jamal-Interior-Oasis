@@ -6,46 +6,67 @@
     <title>{{ $product->name }}</title>
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
     <style>
+        body {
+            background: #f8f9fa;
+            color: #333;
+            font-family: Arial, sans-serif;
+        }
         .product-detail {
             display: flex;
+            flex-wrap: wrap;
             gap: 20px;
             max-width: 1200px;
-            margin: 20px auto;
+            margin: 40px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
         .product-detail img {
-            width: 50%;
+            flex: 1 1 50%;
             height: auto;
             border-radius: 8px;
+            object-fit: cover;
         }
         .product-info {
-            max-width: 50%;
+            flex: 1 1 50%;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
         .product-info h1 {
-            font-size: 28px;
-            color: #333;
+            font-size: 32px;
+            color: #172D13; /* Dark Green */
+            margin-bottom: 20px;
         }
         .product-info p {
             font-size: 18px;
             color: #666;
-            margin: 15px 0;
+            margin-bottom: 20px;
+            line-height: 1.6;
         }
         .product-info .price {
             font-size: 24px;
-            color: #007bff;
-            margin: 15px 0;
+            color: #D76F30; /* Orange */
+            margin-bottom: 20px;
+            font-weight: bold;
         }
         .product-info .btn {
             padding: 10px 20px;
-            background: #007bff;
+            background: #6BB77B; /* Light Green */
             color: white;
             text-align: center;
             border: none;
             border-radius: 4px;
             text-decoration: none;
+            transition: background 0.3s;
+            font-size: 16px;
+            cursor: pointer;
             display: inline-block;
         }
         .product-info .btn:hover {
-            background: #0056b3;
+            background: #172D13; /* Dark Green */
         }
     </style>
 </head>
@@ -76,4 +97,3 @@
     @include('footer')
 </body>
 </html>
-

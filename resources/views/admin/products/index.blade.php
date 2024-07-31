@@ -1,5 +1,3 @@
-<!-- resources/views/admin/products/index.blade.php -->
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -91,6 +89,14 @@
             max-height: 100px;
             object-fit: cover;
         }
+        .dropdown {
+            display: inline-block;
+        }
+        .dropdown select {
+            padding: 5px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
     </style>
 </head>
 <body>
@@ -109,7 +115,17 @@
 
         <div class="card">
             <h2>Product List</h2>
-
+            <div class="dropdown">
+                <form action="{{ route('admin.products.index') }}" method="GET">
+                    <label for="category">Filter by Category:</label>
+                    <select id="category" name="category" onchange="this.form.submit()">
+                        <option value="">All Categories</option>
+                        @foreach($categories as $category)
+                            <option value="{{ $category }}" {{ request('category') == $category ? 'selected' : '' }}>{{ $category }}</option>
+                        @endforeach
+                    </select>
+                </form>
+            </div>
             <table class="table">
                 <thead>
                     <tr>
@@ -118,7 +134,7 @@
                         <th>Description</th>
                         <th>Price</th>
                         <th>Category</th>
-                        <th>Image</th> <!-- Added Image column -->
+                        <th>Image</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -128,7 +144,7 @@
                         <td>{{ $product->id }}</td>
                         <td>{{ $product->name }}</td>
                         <td>{{ $product->description }}</td>
-                        <td>${{ $product->price }}</td>
+                        <td>Ksh {{ $product->price }}</td>
                         <td>{{ $product->category }}</td>
                         <td>
                             @if($product->image)

@@ -7,10 +7,18 @@
     <!-- Include Bootstrap CSS and custom styles -->
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
     <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            color: #333;
+        }
         .cart-container {
             max-width: 1000px;
             margin: 0 auto;
             padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
         .cart-header {
             text-align: center;
@@ -18,7 +26,7 @@
         }
         .cart-header h1 {
             font-size: 32px;
-            color: #333;
+            color: #172D13; /* Dark Green */
         }
         .cart-table {
             width: 100%;
@@ -32,6 +40,7 @@
         }
         .cart-table th {
             background-color: #f4f4f4;
+            color: #172D13; /* Dark Green */
         }
         .cart-table img {
             max-width: 100px;
@@ -41,7 +50,7 @@
             margin-bottom: 20px;
         }
         .form-group button {
-            background-color: #007bff;
+            background-color: #D76F30; /* Orange */
             color: #fff;
             border: none;
             padding: 10px 20px;
@@ -49,13 +58,35 @@
             cursor: pointer;
         }
         .form-group button:hover {
-            background-color: #0056b3;
+            background-color: #C15C2D; /* Darker Orange */
+        }
+        .form-group a.btn-success {
+            background-color: #6BB77B; /* Light Green */
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 4px;
+            text-decoration: none;
+        }
+        .form-group a.btn-success:hover {
+            background-color: #5A9B6E; /* Darker Light Green */
         }
         .total-price {
             font-size: 24px;
             font-weight: bold;
             text-align: right;
             margin-bottom: 20px;
+            color: #172D13; /* Dark Green */
+        }
+        .btn-danger {
+            background-color: #D76F30; /* Orange */
+            color: #fff;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .btn-danger:hover {
+            background-color: #C15C2D; /* Darker Orange */
         }
     </style>
 </head>
@@ -88,16 +119,16 @@
                                     <img src="{{ $item['image'] }}" alt="{{ $item['name'] }}">
                                 </td>
                                 <td>{{ $item['name'] }}</td>
-                                <td>${{ number_format($item['price'], 2) }}</td>
+                                <td>Ksh {{ number_format($item['price'], 2) }}</td>
                                 <td>
                                     <input type="number" name="quantity[{{ $id }}]" value="{{ $item['quantity'] }}" min="1" style="width: 60px;">
                                 </td>
-                                <td>${{ number_format($item['price'] * $item['quantity'], 2) }}</td>
+                                <td>Ksh {{ number_format($item['price'] * $item['quantity'], 2) }}</td>
                                 <td>
                                     <form action="{{ route('cart.destroy', $id) }}" method="POST" style="display:inline;">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" style="background-color: #3583dc;">Remove</button>
+                                        <button type="submit" class="btn-danger">Remove</button>
                                     </form>
                                 </td>
                             </tr>
@@ -106,7 +137,7 @@
                 </table>
 
                 <div class="total-price">
-                    Total: ${{ number_format($total, 2) }}
+                    Total: Ksh {{ number_format($total, 2) }}
                 </div>
 
                 <div class="form-group">
@@ -115,7 +146,7 @@
             </form>
 
             <div class="form-group">
-                <a href="{{ route('checkout.index') }}" class="btn btn-success">Proceed to Checkout</a>
+                <a href="{{ route('checkout.index') }}" class="btn-success">Proceed to Checkout</a>
             </div>
         @else
             <p>Your cart is currently empty.</p>

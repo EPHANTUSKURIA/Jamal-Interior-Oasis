@@ -20,6 +20,7 @@ class CartController extends Controller
      */
     public function index()
     {
+        Log::info('Cart index method called');
         $cart = $this->getCartItems();
         $total = $this->calculateTotal($cart);
         return view('cart.cart', ['cart' => $cart, 'total' => $total]);
@@ -101,43 +102,37 @@ class CartController extends Controller
      * @return \Illuminate\Http\RedirectResponse
      */
     public function checkout(Request $request)
-    {
-        // Ensure user is authenticated
-        if (!Auth::check()) {
-            return redirect()->route('login')->with('error', 'Please log in to proceed with the checkout.');
-        }
-
-        // Validate the checkout request
-        $request->validate([
-            'delivery_option' => 'required|string',
-            // Add other validation rules if needed
-        ]);
-
-        // Create a new order
-        $order = new Order();
-        $order->user_id = Auth::id(); // Get the authenticated user's ID
-        $order->total = $this->calculateTotal($this->getCartItems()); // Calculate total based on cart items
-        $order->status = 'pending'; // Set initial order status
-        $order->delivery_option = $request->input('delivery_option'); // Example input
-        $order->delivery_location = $request->input('delivery_location', null); // Set delivery location if applicable
-        $order->save();
-
-        // Add order items
-        foreach ($this->getCartItems() as $id => $cartItem) {
-            $orderItem = new OrderItem();
-            $orderItem->order_id = $order->id;
-            $orderItem->product_id = $id; // Use cart item ID as product ID
-            $orderItem->quantity = $cartItem['quantity'];
-            $orderItem->price = $cartItem['price'];
-            $orderItem->save();
-        }
-
-        // Clear the cart after order is placed
-        $this->clearCart();
-
-        // Redirect to the orders page with a success message
-        return redirect()->route('orders.index')->with('success', 'Your order has been placed successfully.');
+{
+    if (!Auth::check()) {
+        return redirect()->route('login')->with('error', 'Please log in to proceed with the checkout.');
     }
+
+    $request->validate([
+        'delivery_option' => 'required|string',
+    ]);
+
+    $order = new Order();
+    $order->user_id = Auth::id(); // Ensure this returns a valid user ID
+    $order->total = $this->calculateTotal($this->getCartItems());
+    $order->status = 'pending';
+    $order->delivery_option = $request->input('delivery_option');
+    $order->delivery_location = $request->input('delivery_location', null);
+    $order->save();
+
+    foreach ($this->getCartItems() as $id => $cartItem) {
+        $orderItem = new OrderItem();
+        $orderItem->order_id = $order->id;
+        $orderItem->product_id = $id;
+        $orderItem->quantity = $cartItem['quantity'];
+        $orderItem->price = $cartItem['price'];
+        $orderItem->save();
+    }
+
+    $this->clearCart();
+
+    return redirect()->route('orders.index')->with('success', 'Your order has been placed successfully.');
+}
+
 
     /**
      * Confirm order.

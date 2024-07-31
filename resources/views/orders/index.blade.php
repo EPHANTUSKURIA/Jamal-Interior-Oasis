@@ -81,7 +81,7 @@
                         <tr>
                             <td>{{ $order->id }}</td>
                             <td>{{ $order->created_at->format('Y-m-d') }}</td>
-                            <td>${{ number_format($order->total, 2) }}</td>
+                            <td>Ksh {{ number_format($order->total, 2) }}</td>
                             <td class="status">{{ ucfirst($order->status) }}</td>
                             <td>
                                 <a href="{{ route('orders.index', $order->id) }}" class="details">View Details</a>

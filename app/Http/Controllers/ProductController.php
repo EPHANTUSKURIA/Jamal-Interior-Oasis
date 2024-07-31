@@ -93,7 +93,15 @@ class ProductController extends Controller
      */
     public function create()
     {
-        return view('admin.products.create');
+        // Fetch categories from the database or define them statically
+        $categories = ['Living Room Furniture', 'Bedroom Furniture', 'Dining Room Furniture', 'Office Furniture', 'Outdoor Furniture'];
+
+        // Pass categories to the view
+        // Debugging
+    dd($categories);
+
+        
+        return view('admin.products.create', compact('categories'));
     }
 
     /**

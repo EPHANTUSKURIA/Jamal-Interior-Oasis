@@ -101,7 +101,7 @@
                         <td>{{ $product->id }}</td>
                         <td>{{ $product->name }}</td>
                         <td>{{ $product->description }}</td>
-                        <td>${{ $product->price }}</td>
+                        <td>Ksh {{ $product->price }}</td>
                         <td>{{ $product->category }}</td>
                         <td>{{ $product->created_at->format('Y-m-d') }}</td>
                     </tr>

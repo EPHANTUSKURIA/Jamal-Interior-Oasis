@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Log; // Import the Log facade
 use App\Models\Order;
 use App\Models\OrderItem;
 
@@ -53,9 +54,21 @@ class CheckoutController extends Controller
         $deliveryAddress = $deliveryOption === 'delivery' ? $validated['delivery_address'] : null;
         $totalPrice = $this->calculateTotalPrice($cart);
 
+        // Get the user ID and log it
+        $userId = auth()->id();
+        
+        // Log the user ID and a warning message if it's null
+        if (!$userId) {
+            Log::warning('User ID is null in CheckoutController@process', [
+                'ip' => $request->ip(),
+                'session_id' => session()->getId(),
+            ]);
+            return redirect()->route('login')->with('error', 'Please log in to proceed with checkout.');
+        }
+
         // Create the order
         $order = Order::create([
-            'user_id' => auth()->id(), // Assuming user is authenticated
+            'user_id' => $userId,
             'total_price' => $totalPrice,
             'delivery_option' => $deliveryOption,
             'delivery_address' => $deliveryAddress,
@@ -74,7 +87,12 @@ class CheckoutController extends Controller
         Session::forget('cart');
 
         return redirect()->route('orders.confirm')->with('success', 'Order placed successfully');
+    }public function __construct()
+    {
+        $this->middleware('auth');
     }
+    
+
 
     // Calculate the total price of the cart
     private function calculateTotalPrice(array $cart): float

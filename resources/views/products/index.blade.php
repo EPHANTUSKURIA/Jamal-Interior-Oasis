@@ -10,18 +10,22 @@
         body {
             background: #f8f9fa;
             color: #333;
+            font-family: Arial, sans-serif;
         }
         h1 {
             text-align: center;
             margin-bottom: 30px;
             color: #172D13; /* Dark Green */
             text-transform: uppercase;
+            font-size: 36px;
+            letter-spacing: 1.2px;
         }
         .product-list {
             display: flex;
             flex-wrap: wrap;
             gap: 20px;
             justify-content: center;
+            padding: 0 15px;
         }
         .product-item {
             background: white;
@@ -31,6 +35,8 @@
             width: calc(25% - 20px);
             box-sizing: border-box;
             transition: transform 0.3s, box-shadow 0.3s;
+            display: flex;
+            flex-direction: column;
         }
         .product-item:hover {
             transform: translateY(-10px);
@@ -42,29 +48,30 @@
             object-fit: cover;
             border-bottom: 1px solid #e9ecef;
         }
-        .product-item .product-info {
+        .product-info {
             padding: 15px;
             text-align: center;
+            flex-grow: 1;
         }
-        .product-item h3 {
+        .product-info h3 {
             margin: 0;
             font-size: 20px;
-            color: #333;
+            color: #172D13; /* Dark Green */
+            font-weight: bold;
         }
-        .product-item p {
+        .product-info p {
             color: #666;
             font-size: 14px;
             margin: 10px 0;
         }
-        .product-item .price {
+        .price {
             font-size: 22px;
             color: #D76F30; /* Orange */
             margin-top: 10px;
             font-weight: bold;
         }
-        .product-item .btn {
+        .btn {
             display: inline-block;
-            width: auto;
             padding: 10px 20px;
             background: #6BB77B; /* Light Green */
             color: white;
@@ -75,8 +82,8 @@
             margin-top: 10px;
             transition: background 0.3s;
         }
-        .product-item .btn:hover {
-            background: #0056b3;
+        .btn:hover {
+            background: #172D13; /* Dark Green */
         }
     </style>
 </head>

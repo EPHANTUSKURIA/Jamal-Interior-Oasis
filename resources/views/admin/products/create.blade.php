@@ -1,5 +1,3 @@
-<!-- resources/views/admin/products/create.blade.php -->
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -59,7 +57,7 @@
             display: block;
             margin-bottom: 5px;
         }
-        .form-group input, .form-group textarea {
+        .form-group input, .form-group textarea, .form-group select {
             width: 100%;
             padding: 10px;
             border-radius: 5px;
@@ -98,28 +96,38 @@
         <div class="card">
             <h2>New Product Form</h2>
 
-            <form action="{{ route('admin.products.store') }}" method="POST">
+            <form action="{{ route('admin.products.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="form-group">
                     <label for="name">Product Name</label>
-                    <input type="text" id="name" name="name" required>
+                    <input type="text" id="name" name="name" required class="form-control">
                 </div>
+
                 <div class="form-group">
                     <label for="description">Description</label>
-                    <textarea id="description" name="description" rows="4" required></textarea>
+                    <textarea id="description" name="description" rows="4" required class="form-control"></textarea>
                 </div>
+
                 <div class="form-group">
                     <label for="price">Price</label>
-                    <input type="number" id="price" name="price" step="0.01" required>
+                    <input type="number" id="price" name="price" step="0.01" required class="form-control">
                 </div>
+
                 <div class="form-group">
                     <label for="category">Category</label>
-                    <input type="text" id="category" name="category" required>
+                    <select id="category" name="category" required class="form-control">
+                        <option value="">Select Category</option>
+                        @foreach($categories as $category)
+                            <option value="{{ $category }}">{{ $category }}</option>
+                        @endforeach
+                    </select>
                 </div>
+
                 <div class="form-group">
                     <label for="image">Product Image</label>
-                    <input type="file" id="image" name="image" required>
+                    <input type="file" id="image" name="image" required class="form-control">
                 </div>
+
                 <button type="submit" class="btn btn-primary">Create Product</button>
             </form>
         </div>
@@ -127,4 +135,5 @@
 
     <script src="{{ asset('js/app.js') }}"></script>
 </body>
+
 </html>

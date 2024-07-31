@@ -50,40 +50,44 @@ class OrderController extends Controller
      * @return \Illuminate\Http\RedirectResponse
      */
     public function checkout(Request $request)
-    {
-        $cart = Session::get('cart', []);
-        if (empty($cart)) {
-            return redirect()->route('cart.index')->with('error', 'Your cart is empty.');
-        }
-
-        $total = array_sum(array_column($cart, 'price'));
-
-        $request->validate([
-            'delivery_option' => 'required',
-            'delivery_location' => 'required_if:delivery_option,delivery',
-        ]);
-
-        $order = new Order();
-        $order->user_id = auth()->id();
-        $order->total_amount = $total;
-        $order->delivery_option = $request->input('delivery_option');
-        $order->delivery_location = $request->input('delivery_location');
-        $order->order_date = now(); 
-        $order->save();
-
-        foreach ($cart as $productId => $item) {
-            $order->items()->create([
-                'order_id' => $order->id,
-                'product_id' => $productId,
-                'quantity' => $item['quantity'],
-                'price' => $item['price'],
-            ]);
-        }
-
-        Session::forget('cart');
-
-        return redirect()->route('order.confirm');
+{
+    if (!auth()->check()) {
+        return redirect()->route('login')->with('error', 'Please log in to proceed with the checkout.');
     }
+
+    $cart = Session::get('cart', []);
+    if (empty($cart)) {
+        return redirect()->route('cart.index')->with('error', 'Your cart is empty.');
+    }
+
+    $total = array_sum(array_column($cart, 'price'));
+
+    $request->validate([
+        'delivery_option' => 'required',
+        'delivery_location' => 'required_if:delivery_option,delivery',
+    ]);
+
+    $order = new Order();
+    $order->user_id = auth()->id(); // Ensure this returns a valid user ID
+    $order->total_amount = $total;
+    $order->delivery_option = $request->input('delivery_option');
+    $order->delivery_location = $request->input('delivery_location');
+    $order->order_date = now(); 
+    $order->save();
+
+    foreach ($cart as $productId => $item) {
+        $order->items()->create([
+            'order_id' => $order->id,
+            'product_id' => $productId,
+            'quantity' => $item['quantity'],
+            'price' => $item['price'],
+        ]);
+    }
+
+    Session::forget('cart');
+
+    return redirect()->route('order.confirm');
+}
 
     /**
      * Store a newly created order in storage.

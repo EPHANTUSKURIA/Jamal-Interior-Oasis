@@ -116,7 +116,7 @@
                             <td>{{ $order->id }}</td>
                             <td>{{ $order->customer_name }}</td>
                             <td>{{ $order->status }}</td>
-                            <td>${{ number_format($order->total_amount, 2) }}</td>
+                            <td>Ksh {{ number_format($order->total_amount, 2) }}</td>
                             <td>
                                 <a href="{{ route('admin.orders.show', $order->id) }}" class="btn">View</a>
                             </td>

@@ -131,8 +131,8 @@
         <tr>
             <td>{{ $item->product->name }}</td> <!-- Ensure product relationship is correctly set -->
             <td>{{ $item->quantity }}</td>
-            <td>Ksh{{ number_format($item->price, 2) }}</td> <!-- Change $ to Ksh -->
-            <td>Ksh{{ number_format($item->quantity * $item->price, 2) }}</td> <!-- Change $ to Ksh -->
+            <td>Ksh {{ number_format($item->price, 2) }}</td> <!-- Change $ to Ksh -->
+            <td>Ksh {{ number_format($item->quantity * $item->price, 2) }}</td> <!-- Change $ to Ksh -->
         </tr>
     @endforeach
 @else

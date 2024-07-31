@@ -90,17 +90,17 @@
                     @foreach ($order->items as $OrderItem)
                         <tr>
                            <td>{{ $OrderItem->product->name }}</td>
-                           <td>${{ number_format($OrderItem->price, 2) }}</td>
+                           <td>Ksh {{ number_format($OrderItem->price, 2) }}</td>
                            <td>{{ $OrderItem->quantity }}</td>
-                           <td>${{ number_format($OrderItem->price * $OrderItem->quantity, 2) }}</td>
+                           <td>Ksh {{ number_format($OrderItem->price * $OrderItem->quantity, 2) }}</td>
                         </tr>
                     @endforeach
                 </tbody>
             </table>
             <h3>Order Summary</h3>
-            <p>Subtotal: ${{ number_format($order->subtotal, 2) }}</p>
-            <p>Shipping Cost: ${{ number_format($order->shipping_cost, 2) }}</p>
-            <p>Total: ${{ number_format($order->total, 2) }}</p>
+            <p>Subtotal: Ksh {{ number_format($order->subtotal, 2) }}</p>
+            <p>Shipping Cost: Ksh {{ number_format($order->shipping_cost, 2) }}</p>
+            <p>Total: Ksh {{ number_format($order->total, 2) }}</p>
         </div>
         <a href="{{ route('home') }}" class="button">Continue Shopping</a>
     </div>

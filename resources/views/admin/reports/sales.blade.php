@@ -99,7 +99,7 @@
                     <tr>
                         <td>{{ $order->id }}</td>
                         <td>{{ $order->customer_name }}</td>
-                        <td>${{ $order->total_price }}</td>
+                        <td>Ksh {{ $order->total_price }}</td>
                         <td>{{ $order->created_at->format('Y-m-d') }}</td>
                     </tr>
                     @endforeach
