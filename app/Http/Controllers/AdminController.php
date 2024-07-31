@@ -23,17 +23,34 @@ class AdminController extends Controller
     }
 
     // Show list of products
-    public function products()
-    {
-        $products = Product::all();
-        return view('admin.products.index', compact('products'));
+    public function products(Request $request)
+{
+    $categoryFilter = $request->input('category');
+    $categories = Product::distinct()->pluck('category');
+    
+    $query = Product::query();
+
+    if ($categoryFilter) {
+        $query->where('category', $categoryFilter);
     }
 
+    $products = $query->get();
+
+    return view('admin.products.index', compact('products', 'categories'));
+}
+
+
+    // Show form to create a new product
     // Show form to create a new product
     public function createProduct()
     {
-        return view('admin.products.create');
+        // Fetch all unique categories from products or define them here
+        $categories = ['Living Room Furniture', 'Bedroom Furniture', 'Dining Room Furniture', 'Office Furniture', 'Outdoor Furniture'];
+        
+        return view('admin.products.create', compact('categories'));
     }
+    
+
 
     // Store a new product
     public function storeProduct(Request $request)
@@ -221,4 +238,7 @@ class AdminController extends Controller
         Auth::logout();
         return redirect('/admin/login'); // Redirect to admin login page after logout
     }
+    
+
+
 }
