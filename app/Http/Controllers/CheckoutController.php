@@ -71,7 +71,7 @@ class CheckoutController extends Controller
             'user_id' => $userId,
             'total_price' => $totalPrice,
             'delivery_option' => $deliveryOption,
-            'delivery_address' => $deliveryAddress,
+            'delivery_location' => $deliveryAddress,
         ]);
 
         // Save order items
